@@ -1,2 +1,29 @@
-# dimensionality-reduction
-Experiments with three dimensionality reduction techniques.
+## Dimensionality Reduction
+This work is experiments with three dimensionality reduction techniques in Python.
+
+### Installation
+
+### Running
+
+Custom hyperparameters in a textfile i.e. _"./configs/config.txt"_.
+
+
+A _results_ folder will contain a timestamp directory with the latest results.
+
+This work is a experiment with a number of algorithms on several datasets.
+The aim is to get a feeling of how well each of these algorithms works, 
+and whether there are differences depending on the dataset.
+
+### Datasets
+* Iris (http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html) 
+* Breast Cancer (https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
+
+### Classifiers
+
+### Metrics
+
+### Splitting technique
+
+### Results
+
+### Description and analysis
