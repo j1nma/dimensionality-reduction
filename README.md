@@ -18,7 +18,10 @@ and whether there are differences depending on the dataset.
 * Iris (http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html) 
 * Breast Cancer (http://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(diagnostic))
 
-### Classifiers
+### Techniques
+* PCA
+* t-SNE
+* Multi Dimensional Scaling (MDS)
 
 ### Metrics
 
