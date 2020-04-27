@@ -1,14 +1,17 @@
 import argparse
-import sys
-import os
 import datetime
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import os
+import pandas as pd
+import sys
+import time
 from sklearn.datasets import load_iris, load_breast_cancer
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE, MDS
 from mpl_toolkits.mplot3d import Axes3D
+from pathlib import Path
 
 
 def log(logfile, s):
@@ -33,7 +36,12 @@ def get_args_parser():
         default="PCA",
         help="Name of the dimensionality reduction technique: PCA, tSNE, MDS."
     )
-
+    parser.add_argument(
+        "-c",
+        "--components",
+        default=2,
+        help="Number of components to consider for PCA, tSNE: 2, 3."
+    )
     parser.add_argument(
         "-s",
         "--seed",
@@ -60,16 +68,12 @@ def experiments(config_file):
     outdir = args.outdir + timestamp + '/'
 
     # Create results directory
-    if not os.path.exists(args.outdir):
-        os.mkdir(args.outdir)
-
-    # Create results directory
-    os.mkdir(outdir)
+    outdir_path = Path(outdir)
+    if not outdir_path.is_dir():
+        os.makedirs(outdir)
 
     # Logging
     logfile = outdir + 'log.txt'
-    # f = open(logfile, 'w')
-    # f.close()
 
     log(logfile, "Directory " + outdir + " created.")
 
@@ -81,7 +85,7 @@ def experiments(config_file):
     elif args.dataset == 'BreastCancer':
         dataset = load_breast_cancer()
         dataset_name = "Breast Cancer Wisconsin"
-        original_labels = ['benign', 'malignant']
+        original_labels = ['malignant', 'benign']
     else:
         raise ("Dataset not found")
 
@@ -105,29 +109,31 @@ def experiments(config_file):
     data = df.loc[:, dataset.feature_names].values
     data = StandardScaler().fit_transform(data)
 
-    # feat_cols = ['feature' + str(i) for i in range(x.shape[1])]
-    # normalised_df = pd.DataFrame(data, columns=feat_cols)
-    normalised_df = pd.DataFrame(data, columns=dataset.feature_names)
-    log(logfile, normalised_df.tail())
+    # Set number of components
+    n_components = int(args.components)
 
     # Set technique
-    transformed_df = {}
-    n_components = -1
     if args.technique == 'PCA':
-        if args.dataset == 'Iris':
-            n_components = 3
-        else:
-            n_components = 2
         pca = PCA(n_components=n_components)
         data_transformed = pca.fit_transform(data)
         transformed_df = pd.DataFrame(data=data_transformed, columns=['PC ' + str(i + 1) for i in range(n_components)])
-        log(logfile, 'Explained variation per principal component: {}'.format(pca.explained_variance_ratio_))
+        log(logfile, 'Cumulative explained variation for {} principal components: {}'.format(n_components,
+                                                                                             np.sum(
+                                                                                                 pca.explained_variance_ratio_).round(
+                                                                                                 decimals=3)))
     elif args.technique == 'tSNE':
-        technique = 1
-        # technique = load_breast_cancer() TODO
+        time_start = time.time()
+        tsne = TSNE(n_components=n_components, n_iter=1000, random_state=int(args.seed))
+        data_transformed = tsne.fit_transform(data)
+        log(logfile, 't-SNE done! Time elapsed: {0:.3f} seconds'.format(time.time() - time_start))
+        transformed_df = pd.DataFrame(data=data_transformed, columns=['PC ' + str(i + 1) for i in range(n_components)])
+
     elif args.technique == 'MDS':
-        technique = 1
-        # technique = load_breast_cancer() TODO
+        embedding = MDS(n_components=n_components)
+        data_transformed = embedding.fit_transform(data)
+        log(logfile, 'MDS transformation shape: {}'.format(data_transformed.shape))
+        transformed_df = pd.DataFrame(data=data_transformed, columns=['PC ' + str(i + 1) for i in range(n_components)])
+
     else:
         raise ("Technique not found")
 
@@ -139,7 +145,6 @@ def experiments(config_file):
         ax = Axes3D(fig)
         ax.set_zlabel('PC 3', fontsize=15)
     elif n_components == 2:
-        plt.figure()
         plt.figure(figsize=(10, 10))
 
     plt.xticks(fontsize=12)
@@ -151,15 +156,18 @@ def experiments(config_file):
     colors = ['r', 'g', 'b']
     for label, color in zip(original_labels, colors):
         indicesToKeep = df['label'] == label
-        if args.dataset == 'Iris':
+        if n_components == 3:
             ax.scatter(transformed_df.loc[indicesToKeep, 'PC 1'],
                        transformed_df.loc[indicesToKeep, 'PC 2'],
-                       transformed_df.loc[indicesToKeep, 'PC 3'], s=50)
+                       transformed_df.loc[indicesToKeep, 'PC 3'], c=color, s=50)
         else:
             plt.scatter(transformed_df.loc[indicesToKeep, 'PC 1'],
                         transformed_df.loc[indicesToKeep, 'PC 2'], c=color, s=50)
 
-    plt.legend(original_labels, prop={'size': 15}, loc="lower right")
+    if args.dataset == 'Iris':
+        plt.legend(original_labels, prop={'size': 15}, loc="lower right")
+    else:
+        plt.legend(original_labels, prop={'size': 15}, loc="upper right")
 
     plt.savefig(outdir + '{}_c={}.svg'.format(args.technique, n_components), format="svg")
 
