@@ -1,0 +1,8 @@
+--dataset
+Iris
+--technique
+PCA
+--seed
+1910299034
+--outdir
+results/
