@@ -16,7 +16,7 @@ and whether there are differences depending on the dataset.
 
 ### Datasets
 * Iris (http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html) 
-* Breast Cancer (https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
+* Breast Cancer (http://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(diagnostic))
 
 ### Classifiers
 
