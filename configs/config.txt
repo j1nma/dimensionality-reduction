@@ -1,8 +1,10 @@
 --dataset
-Iris
+BreastCancer
 --technique
-tSNE
+MDS
+--components
+3
 --seed
 1910299034
 --outdir
-results/Iris/tSNE
+results/breast-cancer-wisconsin/MDS/
