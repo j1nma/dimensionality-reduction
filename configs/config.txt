@@ -1,8 +1,8 @@
 --dataset
 Iris
 --technique
-PCA
+tSNE
 --seed
 1910299034
 --outdir
-results/
+results/Iris/tSNE
