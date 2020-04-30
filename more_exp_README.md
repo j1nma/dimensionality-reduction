@@ -1,5 +1,4 @@
-# TODO adapt
-## Comparative Experimentation of Machine Learning Classifiers
+## Dimensionality Reduction
 
 ### Installation
 ```sh
@@ -18,192 +17,119 @@ $  python3 experiments.py ./configs/config.txt
 
 A _results_ folder will contain a timestamp directory with the latest results.
 
-This work is a experiment with a number of algorithms on several datasets.
-The aim is to get a feeling of how well each of these algorithms works, 
-and whether there are differences depending on the dataset.
-
 ---
 
 ### Datasets
 * Iris (http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html) 
-* Handwritten digits (http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html)
-* Music (by George Tzanetakis, called "gtzan")
+
+The first rows of this dataset's dataframe are shown below:
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/iris/df_head.png)
+
+This dataset is often used as a benchmark for multiple machine learning fields.
+It is composed of 4 features of flower petals (dimensionality = 4). There are three possible classes of petals,
+with 50 samples per class.
+
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/Iris.svg)
+
+From the image above one can see at a glance a histogram of each feature with respect to the three available classes.
+Some features distinguish the labels more than others, for instance, the setosa type is more easily identified when
+conditioning on petal width.
+
+* Breast Cancer (http://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(diagnostic))
+
+The first rows of this dataset's dataframe are shown below:
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/breast-cancer-wisconsin/df_head.png)
+
+This dataset represents characteristics of cell nuclei from images of breast mass.
+It is composed of 569 samples of 30 features for each cell nuclei (dimensionality = 30). There are 2 possible classes for a breast mass,
+'malignant' or 'benign'. Some characteristics are: texture, concavity, symmetry.
+
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/BreastCancerWisconsin.svg)
+
+As in the previous database, from the image above one can see a histogram of each feature with respect to the two
+possible outcomes.
+In the same manner, the difference in overlaps along the features can suggest a certain covariance between the classes.
+These last histograms were generated based on algorithms from https://towardsdatascience.com/dive-into-pca-principal-component-analysis-with-python-43ded13ead21.
 
 ---
 
-### Classifiers
-* k-NN (with 3 different values for k)
-* Naive Bayes
-* Perceptron
-* Decision Trees
-* SVC, LinearSVC
-* Random Forests: one limited by max depth
-* Full Decision Tree
-* Pruned Decision Tree
-
-For each dataset, each classifier is trained and evaluated (with parameter variations), and then evaluation metrics are
-computed.
-
----
-
-### Metrics
-* Effectiveness: accuracy, precision
-* Efficiency: runtime for training and testing
-
----
-
-### Splitting technique
-The holdout method with 2/3 training and the rest for testing is used once, and cross validation with 5 folds also used once.
+### Techniques
+* PCA
+* t-SNE
+* Multi Dimensional Scaling (MDS)
 
 ---
 
 ### Results
-![](./results/20191224_030653/data_bpm_5_folds_results.csv.png)
+#### Description of the results from the visualisations
+**Iris Dataset**
 
-![](./results/20191224_030653/data_bpm_two_thirds_results.csv.png)
+_PCA_
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/iris/PCA/20200428_005929/PCA_c=2.svg)
+The cumulative explained variation for 2 principal components for this 2D visualization was 0.958. 
+The versicolour and virginica classes are not as identifiable as the setosa variation.
 
-![](./results/20191224_030653/data_bpm_statistics_5_folds_results.csv.png)
-
-![](./results/20191224_030653/data_bpm_statistics_two_thirds_results.csv.png)
-
-![](./results/20191224_030653/data_chroma_5_folds_results.csv.png)
-
-![](./results/20191224_030653/data_chroma_two_thirds_results.csv.png)
-
-![](./results/20191224_030653/data_mfcc_5_folds_results.csv.png)
-
-![](./results/20191224_030653/data_mfcc_two_thirds_results.csv.png)
----
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/iris/PCA/20200428_010206/PCA_c=3.svg)
+The cumulative explained variation for 3 principal components for this 3D visualization was 0.995, a 4% improvement.
+In other words, the loss of information is 0.5%.
+In this case, the classes appear to be more separated, but the 3D visualization is not as clear as its 2D version.
 
 
-### Description and analysis
+_t-SNE_
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/iris/tSNE/20200428_010226/tSNE_c=2.svg)
+The time taken to calculate this t-SNE reduction was 0.678 seconds. Similar to the last 2D visualization, the setosa
+class is more identifiable. Also, there are some outliers from the remaining classes in each others areas.
 
-#### Which classifiers work best?
-
-Regarding the Iris dataset and the 66-33 training & test split, Naive Bayes has turned out to be the best classifier
-in terms of accuracy. As to the 5-folds split, k-NN (3-NN) is the best one in both mean and standard deviation.
-The largest k-NN and Perceptron classifiers were outperformed by the rest.
-
-Concerning the handwritten digits dataset and the 66-33 training & test split, k-NN (3-NN) resulted as the best
-in terms of accuracy. As to the 5-folds split, k-NN (3-NN) is once again the best undoubtedly,
-in both mean and standard deviation.
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/iris/tSNE/20200428_010232/tSNE_c=3.svg)
+The time taken to calculate this t-SNE reduction with an extra dimension 1.080 seconds, a 60% increase.
+As in the previous case, the visualization may result more confusing than the one with 1 dimension less.
 
 
-#### Are there differences between the datasets?
+_Multi Dimensional Scaling (MDS)_
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/iris/MDS/20200428_005743/MDS_c=2.svg)
+This visualization resembles its PCA variation, though it seems to expand more area, compared to 
+the t-SNE visualization which clearly places setosa far apart form the others.
 
-On the one hand, the iris dataset has 3 different types of irises (plant with showy flowers)
-petal and sepal length and width, with 50 samples for each type:
-	* Setosa
-	* Versicolour
-	* Virginica
-	
-Its dimensionality is 4 real, positive values.
-
-On the other hand, the digits dataset has 1797 samples of handwritten digits from 0 to 9, a class for each digit.
-Each class has around 180 samples. As explained in scikit-learn user guide, normalized bitmaps of handwritten digits
-were extracted from a pre-printed form.
-    43 people contributed, 30 to the training set and 13 to the test set, with no overlapping between sets. 32x32 bitmaps 
-are divided into non-overlapping blocks of 4x4 and the number of on pixels are counted in each block.
-This generates an input matrix of 8x8 where each element is an integer in the range 0 to 16.
-It also reduces dimensionality and gives invariance to small distortions.
-Its dimensionality is 64 integers from 0 to 16.
-   
-   The music dataset contains 1000 songs, 100 songs for 10 genres, and the task is therefore to predict the genres of a song; to limit file size, the songs are only 30 second snippets, and sampled with 22 khz only.
-As this is audio data, feature extraction is a requirement before learning. This extraction generates different features,
-very simple ones containing just bpm, and more advanced ones based on advanced signal processing.
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/iris/MDS/20200428_005807/MDS_c=3.svg)
+This visualization with an extra dimension seems to be a better representation of the
+data, with the datapoints arranged as in 'layers' in 3D space.
 
 
-#### Are there differences in the efficiency measurements?
 
-In all experiments, k-NN takes more time predicting than training. This is because k-NN is also called as lazy
-learner since during fitting it does nothing but save input data (there is no learning). During prediction or testing
-time it is actually when distance calculation happens for each test data point. The opposite observation can be seen
-for Perceptron times, where training calculations must take place, and prediction is rather straightforward.
-With this in mind, Perceptron classifier training time is seen to be significantly greater than the rest.
-    Concerning the music dataset, there are distinctions between the four features. _data_bpm_ is the only feature
-where pruning does not make a difference in terms of training time. For the rest of the features, training time is about
-three times as much as the unpruned experiment, but accuracy and precision are not significantly improved. However, testing
-time is no different between these two settings for all music features. Predictably, Random Forests take at least an order
-of magnitude more in terms of runtime than the rest of the classifiers.
+**Breast Cancer Dataset**
+
+_PCA_
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/breast-cancer-wisconsin/PCA/20200428_012935/PCA_c=2.svg)
+The cumulative explained variation for 2 principal components for this 2D visualization was 0.632. 
+The malignant and benign data points are dispersed around distinct areas,
+with a certain section that borders both.
+
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/breast-cancer-wisconsin/PCA/20200428_012952/PCA_c=3.svg)
+The cumulative explained variation for 3 principal components for this 3D visualization was 0.726, a 15% improvement.
+In other words, the loss of information is about 30%.
+In this case, outliers seem to be more clear, but the perspective does not make
+the visualization more clear than its 2D version.
 
 
-#### How is the runtime changing with the different datasets?
+_t-SNE_
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/breast-cancer-wisconsin/tSNE/20200428_013012/tSNE_c=2.svg)
+The time taken to calculate this t-SNE reduction was 2.711 seconds. This 2D visualization places the classes
+further apart in general terms, though some malignant samples are around
+benign points.
 
-It is clear that the dimensionality plays a major role in the difference in runtime between the datasets.
-The greater computation times for the digits dataset with respect to the ones from the iris dataset can be distinguished easily;
-roughly an order of magnitude greater in most cases, independently of the split chosen.
-    With regards to the music dataset, _data_bpm_ takes the least time in runtime compared to the other features throughout both splits.
-This is expected since it only contains one feature, the tempo, whereas _data_bpm_statistics_ contains 7 other features. 
-The comparison can be seen clearly with _data_mfcc_, which is composed of 7 values per each of the 12 coefficients (mean, median, var, min, max, skewness and kurtosis),
-or with _data_chroma_, which also takes these 7 values for each of the 12 chroma bins, and takes the most runtime.
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/breast-cancer-wisconsin/tSNE/20200428_013020/tSNE_c=3.svg)
+This 3D variation displays clusters for each label, and took 5.932 seconds to calculate, more than double the effort.
+Though not clear from the current perspective, the extra component seems to separate
+the classes on the z-index.
 
-#### Why are accuracy and precision equal?
 
-According to sklearn’s documentation:
-> Note that for “micro”-averaging in a multiclass setting with all labels included will produce equal
-> precision, recall and F, while “weighted” averaging may produce an F-score that is not between precision and recall.
+_Multi Dimensional Scaling (MDS)_
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/breast-cancer-wisconsin/MDS/20200428_013035/MDS_c=2.svg)
+This MDS visualization splits the data in two general areas, with data points
+spreading from each cluster, which seem to be the best representations of the characteristics in the histograms
+from above.
 
-From https://simonhessner.de/why-are-precision-recall-and-f1-score-equal-when-using-micro-averaging-in-a-multi-class-problem/:
-> Micro averaging scheme is not prone to inaccurate values due to an unequally distributed test set
-> (e.g. 3 classes and one of these has 98% of the samples). This is why I prefer this scheme over
-> the macro averaging scheme. Besides micro averaging, one might also consider weighted averaging
-> in case of an unequally distributed data set.
-
-> If there is a false positive, there will always be a false negative and vice versa, because always one class is predicted.
-> If class A is predicted and the true label is B, then there is a FP for A and a FN for B.
-> If the prediction is correct, i.e. class A is predicted and A is also the true label, then there is neither 
-> a false positive nor a false negative but only a true positive.
-
-An example.
-Confusion matrix:
-```
-    [[  13  0   0    ]
-    [   3   6   12   ]
-    [   0   0   16   ]]
-```
-
-Accuracy calculation:
-```
-(13+6+16)/50 = 0.7
-```
-
-Micro-precision calculation:
-```
-((13/13)*(13/50) + (6/21)*(21/50) + (16/16)*(16/50)) = 0.7
-```
-
-#### Experiments with _data_bpm_
-For both splits, the results are improved for an increasing number of NN. Naive Bayes does not improve this, nor
-the Perceptron, which performed worse and took longer than the previously mentioned. The Unpruned decision tree was around the 
-levels of performance of the k-NNs, but was outperformed by the pruned classifier, for which we can conclude that the complete tree
-probably was overfitting. As to the Random Forests classifiers, there are not any differences between the scores, albeit the larger training time
-for the 100-tree forest. There were practically no differences between the SVC and LinearSVC classifiers. 
-
-#### Experiments with _data_bpm_statistics_
-For both splits, the results of the k-NNs, NB and Perceptron are quite like the _data_bpm_ experiments.
-The Unpruned decision tree, which took considerably more time than the latters, was around the levels of performance of the k-NNs,
-but this time it was not outperformed by the pruned classifier. As to the Random Forests classifiers, these were the best performing classifiers, 
-though predictably took longer. Having 10 times the number of trees did not show considerable improvements.
-Once again, there were practically no differences between the SVC and LinearSVC classifiers. 
-
-#### Experiments with _data_chroma_
-With this feature extraction, the performance in terms of accuracy and precision increase considerable compared to the last two.
-For both splits, the results of the k-NNs are around the same, if not worse, for an increasing amount of NN.
-Naive Bayes performed quite well concerning both these measures and the training time. 
-The Perceptron classifier was the second worse, followed by the pruned decision tree which took a fifth of the training time of its
-unpruned version, but performed poorly.
-As to the Random Forests classifiers, these were once again the best performing classifiers, 
-though predictably took longer. Having 10 times the number of trees this time did show considerable improvements, without much more training time.
-Once again, there were practically no differences between the SVC and LinearSVC classifiers, but outperformed all classifiers except for the Random Forests.
-
-#### Experiments with _data_mfcc_
-With this feature extraction, the performance in terms of accuracy and precision is the greatest considering all extractions.
-With mel-frequency cepstral coefficients (MFCCs), taking 12 coefficients, and for each coefficient, around 40 values per second, seems to be the
-best feature extraction on the music dataset.
-For both splits, the results of the k-NNs are worse for an increasing amount of NN, being 3 NN the best performer.
-Naive Bayes performed once again quite well concerning both these measures and the training time. 
-The Perceptron classifier was the second worse, with the greatest standard deviation, followed by the SVC and LinearSVC classifiers, which presented the worse
-results, without a clear distinction between them.
-The pruned decision tree took about a fourth of the training time of its unpruned version, but performed considerably worse.
-As to the Random Forests classifiers, these were once again the best performing classifiers, 
-though predictably took longer. Having 10 times the number of trees this time did show considerable improvements (the best, 0.69 accuracy, in the entire experimentation), without much more training time.
+![](/Users/JuanmaAlonso/FHTKWien/Machine-Learning/dimensionality-reduction/results/breast-cancer-wisconsin/MDS/20200428_013042/MDS_c=3.svg)
+This 3D visualization adds another component to the previous visualization,
+still portraying a cluster-like separation, but the sparsity of most datapoints
+does not provide a clearer picture than the 2D alternative.

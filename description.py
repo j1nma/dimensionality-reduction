@@ -4,8 +4,8 @@ from sklearn.datasets import load_iris, load_breast_cancer
 
 
 def descriptions():
-    dataset_name = "BreastCancerWisconsin"
-    # dataset_name = "Iris"
+    # dataset_name = "BreastCancerWisconsin"
+    dataset_name = "Iris"
 
     # Set dataset
     if dataset_name == "Iris":
@@ -45,7 +45,7 @@ def descriptions():
 
     plt.tight_layout()
     ax[0].legend(original_labels, loc='best', fontsize=9)
-    plt.savefig('{}.svg'.format(dataset_name), format="svg")
+    plt.savefig('{}.jpg'.format(dataset_name), format="svg")
 
 
 if __name__ == "__main__":
