@@ -1,5 +1,5 @@
 ## Dimensionality Reduction
-This work is experiments with three dimensionality reduction techniques in Python.
+This work experiments with three dimensionality reduction techniques in Python.
 
 ### Installation
 $ pip3 install -r requirements.txt
