@@ -2,12 +2,17 @@
 This work experiments with three dimensionality reduction techniques in Python.
 
 ### Installation
+```shell
 $ pip3 install -r requirements.txt
+```
 
 ### Running
 
 Custom hyperparameters in a textfile i.e. _"./configs/config.txt"_.
+
+```shell
 $ python3 experiments.py ./configs/config.txt
+```
 
 A _results_ folder will contain a timestamp directory with the latest results.
 
